@@ -1,5 +1,5 @@
 # ITShield Antivirus
-
+![description](https://github.com/akhzari-itshield/Antivirus/blob/main/Antivirus.png)
 ## معرفی
 
  یک پلتفرم حفاظت نقطه پایانی (Endpoint Protection) با قابلیت‌های آنتی‌ویروس و EDR است که برای Linux و Windows توسعه یافته. این نرم‌افزار با Python، Rust و C++ نوشته شده و شامل موتور تشخیص چندلایه، حفاظت بلادرنگ، تحلیل رفتاری، قرنطینه امن، و رابط گرافیکی کامل است.
