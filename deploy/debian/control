@@ -1,0 +1,24 @@
+Package: itshield-antivirus
+Version: VERSION
+Architecture: all
+Maintainer: ITShield Team <security@itshield.local>
+Installed-Size: 5000
+Depends: python3 (>= 3.10), python3-pip, libyara-dev
+Recommends: python3-pyside6, python3-inotify-simple, python3-cryptography
+Section: security
+Priority: optional
+Description: ITShield Antivirus - Endpoint Protection Platform
+ A modular antivirus + EDR framework for Linux with:
+ .
+  * Hash, Signature, YARA, and PE-based malware detection
+  * Real-time file protection (inotify)
+  * Process and network monitoring (/proc)
+  * Quarantine engine with secure delete and rollback
+  * Correlation engine for incident detection
+  * Behavior analyzer (ransomware, persistence, C2 beaconing)
+  * 12 curated YARA rule sources + abuse.ch IOC feeds
+  * Ed25519 signed update verification
+  * Sandbox analyzer for suspicious file triage
+  * Full RTL GUI with system tray
+  * HTML/JSON/text reporting
+  * systemd service integration

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "generated_at": "2026-11-17T00:00:00Z",
+  "source": "ITShield sample signature bank (educational)",
+  "description": "Initial educational signature bank. Contains the canonical EICAR test hash and a few sample hashes for development and testing. NOT a production threat intelligence feed.",
+  "signatures": [
+    {
+      "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+      "name": "EICAR-Test-File",
+      "family": "Test",
+      "severity": "LOW",
+      "source": "eicar.org",
+      "note": "Canonical 68-byte EICAR test file (no trailing newline)"
+    },
+    {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "Empty-File-Sentinel",
+      "family": "Test",
+      "severity": "INFO",
+      "source": "itshield-sample",
+      "note": "SHA-256 of an empty file (sentinel for bank loading verification)"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+#!/bin/bash
+# postrm - runs after the package is removed.
+set -e
+
+echo "ITShield Antivirus: post-removal cleanup..."
+
+# Remove the system user (keep data dirs for manual removal).
+if id "itshield" &>/dev/null; then
+    userdel itshield 2>/dev/null || true
+    echo "  Removed system user 'itshield'."
+fi
+
+# Reload systemd.
+systemctl daemon-reload 2>/dev/null || true
+
+# Warn about preserved data.
+if [ -d /var/lib/itshield ]; then
+    echo "  Data directory /var/lib/itshield preserved."
+    echo "  To remove completely: sudo rm -rf /var/lib/itshield /var/log/itshield /opt/itshield"
+fi
+
+exit 0

@@ -1,0 +1,59 @@
+#!/bin/bash
+# postinst - runs after the package is installed.
+set -e
+
+echo "ITShield Antivirus: running post-install setup..."
+
+# Create the itshield system user if it doesn't exist.
+if ! id "itshield" &>/dev/null; then
+    useradd --system --no-create-home --shell /usr/sbin/nologin itshield
+    echo "  Created system user 'itshield'."
+fi
+
+# Create data directories.
+mkdir -p /var/lib/itshield
+mkdir -p /var/log/itshield
+mkdir -p /run/itshield
+mkdir -p /opt/itshield/data
+mkdir -p /opt/itshield/data/quarantine
+mkdir -p /opt/itshield/data/bank_backups
+mkdir -p /opt/itshield/reports
+
+# Set ownership.
+chown -R itshield:itshield /var/lib/itshield /var/log/itshield /run/itshield /opt/itshield/data /opt/itshield/reports
+chmod 700 /opt/itshield/data/quarantine
+
+# Install Python dependencies.
+cd /opt/itshield
+pip3 install --system protobuf yara-python grpcio-tools inotify_simple cryptography 2>/dev/null || \
+    pip3 install protobuf yara-python grpcio-tools inotify_simple cryptography 2>/dev/null || \
+    echo "  WARNING: Could not install all Python dependencies. Run manually: pip3 install protobuf yara-python grpcio-tools inotify_simple cryptography"
+
+# Compile the protobuf bindings if missing.
+if [ ! -f /opt/itshield/itshield/ipc/protocol_pb2.py ]; then
+    cd /opt/itshield
+    python3 -m grpc_tools.protoc --proto_path=itshield/ipc --python_out=itshield/ipc itshield/ipc/protocol.proto
+    echo "  Generated protobuf bindings."
+fi
+
+# Reload systemd and enable the service.
+systemctl daemon-reload
+systemctl enable itshield.service 2>/dev/null || true
+
+echo ""
+echo "ITShield Antivirus installed successfully!"
+echo ""
+echo "Quick commands:"
+echo "  sudo systemctl start itshield      # start the service"
+echo "  sudo systemctl status itshield     # check status"
+echo "  sudo systemctl enable itshield     # enable on boot (already done)"
+echo "  journalctl -u itshield -f          # follow logs"
+echo "  itshield --help                    # CLI help"
+echo "  itshield-gui                       # launch the GUI"
+echo ""
+echo "To download YARA rules and IOC feeds:"
+echo "  itshield update yara --all"
+echo "  itshield update ioc"
+echo ""
+
+exit 0

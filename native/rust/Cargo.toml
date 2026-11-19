@@ -1,0 +1,24 @@
+[package]
+name = "itshield-native"
+version = "0.1.0"
+edition = "2021"
+description = "Native (Rust) acceleration layer for ITShield Antivirus: SHA-256 hashing, PE parsing, entropy."
+license = "Proprietary"
+publish = false
+
+[lib]
+name = "itshield_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.22", features = ["extension-module"] }
+sha2 = "0.10"
+hex = "0.4"
+# Walkdir is intentionally NOT included: file traversal stays in Python for now
+# so the same logic is reused across platforms without rebuilding the extension.
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"

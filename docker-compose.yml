@@ -1,0 +1,54 @@
+# ITShield Antivirus - docker-compose.yml
+# Run the ITShield service + GUI in containers.
+#
+# Usage:
+#   docker-compose up -d itshield-service   # start the background service
+#   docker-compose run --rm itshield-cli scan /tmp   # run a one-off CLI command
+#   docker-compose run --rm itshield-gui    # launch the GUI (needs X11 forwarding)
+
+version: "3.8"
+
+services:
+  itshield-service:
+    build: .
+    image: itshield-antivirus:latest
+    container_name: itshield-service
+    restart: unless-stopped
+    command: ["serve"]
+    volumes:
+      - itshield-data:/opt/itshield/data
+      - itshield-reports:/opt/itshield/reports
+      - ./signatures:/opt/itshield/signatures:ro
+      - ./rules:/opt/itshield/rules:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ITSHIELD_IPC_SOCKET=/run/itshield/itshield.sock
+    ports:
+      - "127.0.0.1:9001:9001"  # Expose IPC (documentation only; Unix socket is preferred)
+    user: "0:0"  # needs root for /proc access; restrict in production
+
+  itshield-cli:
+    build: .
+    image: itshield-antivirus:latest
+    profiles: ["cli"]  # only runs on-demand
+    volumes:
+      - itshield-data:/opt/itshield/data
+      - ./signatures:/opt/itshield/signatures:ro
+      - ./rules:/opt/itshield/rules:ro
+    entrypoint: ["python", "-m", "itshield.cli"]
+
+  itshield-gui:
+    build: .
+    image: itshield-antivirus:latest
+    profiles: ["gui"]
+    volumes:
+      - itshield-data:/opt/itshield/data
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_QPA_PLATFORM=xcb
+    entrypoint: ["python", "-m", "itshield.gui.main"]
+
+volumes:
+  itshield-data:
+  itshield-reports:

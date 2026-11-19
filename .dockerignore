@@ -1,0 +1,28 @@
+# ITShield Antivirus - .dockerignore
+# Reduces Docker build context size.
+
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+.pytest_cache/
+htmlcov/
+.coverage
+
+data/itshield.db*
+data/quarantine/*
+data/bank_backups/*
+reports/*
+*.deb
+*.rpm
+*.tar.gz
+*.zip
+
+.git/
+.gitignore
+.travis.yml
+
+docs/
+deploy/debian/
+deploy/itshield.spec

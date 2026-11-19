@@ -1,0 +1,37 @@
+[Unit]
+Description=ITShield Antivirus - Endpoint Protection Service
+Documentation=https://github.com/your-org/itshield-antivirus
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=itshield
+Group=itshield
+WorkingDirectory=/opt/itshield
+ExecStart=/usr/bin/python3 -m itshield.cli serve
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/itshield /var/log/itshield
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+
+# Environment
+Environment=PYTHONUNBUFFERED=1
+Environment=ITSHIELD_IPC_SOCKET=/run/itshield/itshield.sock
+Environment=ITSHIELD_DB_PATH=/var/lib/itshield/itshield.db
+
+[Install]
+WantedBy=multi-user.target

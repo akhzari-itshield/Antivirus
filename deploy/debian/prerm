@@ -1,0 +1,11 @@
+#!/bin/bash
+# prerm - runs before the package is removed.
+set -e
+
+echo "ITShield Antivirus: stopping service before removal..."
+
+# Stop and disable the service.
+systemctl stop itshield.service 2>/dev/null || true
+systemctl disable itshield.service 2>/dev/null || true
+
+exit 0
