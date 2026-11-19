@@ -104,11 +104,14 @@ python -m grpc_tools.protoc --proto_path=itshield\ipc --python_out=itshield\ipc 
 python -m itshield.gui.main
 ###  CLI (همان دستورات Linux)
 python -m itshield.cli scan C:\Users\YourName\Downloads
-## Docker
+## داکر
 docker build -t itshield-antivirus .
 docker run --rm -it -v $(pwd)/data:/opt/itshield/data itshield-antivirus scan /tmp
 ### شتاب‌دهنده Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
 source ~/.cargo/env
+
 pip install maturin
+
 cd native/rust && maturin develop --release && cd ../..
